@@ -1,7 +1,7 @@
 /**
  * @name StereoDiscord
  * @version 0.0.4
- * @description Adds stereo sound to Discord. Better Discord v1.9.3
+ * @description So that your discord sound can be stereo and also clear
  * @authorLink https://github.com/justfariss
  * @website https://github.com/justfariss
  * @source https://github.com/justfariss
@@ -57,7 +57,7 @@ module.exports = (() => {
           {
             type: "switch",
             id: "prioritySpeaking",
-            name: "Priority Speaking", // added
+            name: "Priority Speaking",
             note: "Enable Priority Speaking feature",
             value: true,
           },
@@ -139,8 +139,7 @@ module.exports = (() => {
                   if (thisObj) {
                     const setTransportOptions = thisObj.conn.setTransportOptions;
                     const channelOption = this.settings.stereoChannelOption;
-                    const selectedBitrate = this.settings.bitrateOption; 
-
+                  
                     thisObj.conn.setTransportOptions = function (obj) {
                       if (obj.audioEncoder) {
                         obj.audioEncoder.params = {
@@ -212,8 +211,8 @@ module.exports = (() => {
               const panel = this.buildSettingsPanel();
               const noteElement = document.createElement("div");
               noteElement.className = NameSC+"-settings-note";
-              noteElement.textContent = "Note: After changing any setting, please rejoin the voice channel for the changes to take effect.";
-              noteElement.style.color = "#FF0000";
+              noteElement.textContent = "Note: After setting this part, you must re-join voice so that this setting works.";
+              noteElement.style.color = "#FFFFFF";
               noteElement.style.marginTop = "10px";
               panel.append(noteElement);
               return panel.getElement();
