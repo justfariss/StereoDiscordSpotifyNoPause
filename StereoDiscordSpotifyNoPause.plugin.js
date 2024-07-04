@@ -1,15 +1,15 @@
 /**
  * @name StereoDiscordSpotifyNoPause
  * @version 0.0.2
- * @description So that your discord sound can be stereo and also clear
- * @authorLink https://github.com/justfariss
+ * @description This will make your voice clear and stereo, in the same plugin, you will also get the SpotifyNoPause plugin, so this plugin includes Stereo and SpotifyNoPause.
+ * @authorLink https://discord.com/users/997016243741667379
  * @website https://github.com/justfariss
  * @source https://github.com/justfariss/StereoDiscord
  * @donate https://drive.google.com/file/d/1G5L4UBcv9ceB73rAvgAlg0qWWSmVbfBg/view
  * @invite motionime
- * @updateUrl https://raw.githubusercontent.com/justfariss/StereoDiscord/main/StereoDiscord.plugin.js
+ * @updateUrl https://raw.githubusercontent.com/justfariss/StereoDiscordSpotifyNoPause/main/StereoDiscordSpotifyNoPause.plugin.js
  */
-var NameSC = "StereoDiscordSpotifyNoPause"
+const NameSC = "StereoDiscordSpotifyNoPause"
 module.exports = (() => {
   const config = {
     main: "index.js",
@@ -84,7 +84,7 @@ module.exports = (() => {
         }
         load() {
           BdApi.showConfirmationModal(
-            NameSC + " Plugin Missing",
+            NameSC+" Library Missing",
             `ZeresPluginLibrary is missing. Click "Install Now" to download it.`,
             {
               confirmText: "Install Now",
@@ -124,47 +124,69 @@ module.exports = (() => {
         }
       }
     : (([Plugin, Api]) => {
-        const plugin = (Plugin, Library) => {
-          const { WebpackModules, Patcher, Toasts } = Library;
 
-          return class StereoDiscordSpotifyNoPause extends Plugin {
-            onStart() {
-              this.settingsWarning();
-              const voiceModule = WebpackModules.getModule(
-                BdApi.Webpack.Filters.byPrototypeFields("updateVideoQuality")
-              );
-              BdApi.Patcher.after("StereoDiscordSpotifyNoPause",voiceModule.prototype,"updateVideoQuality", (thisObj, _args, ret) => {
-                  if (thisObj) {
-                    const setTransportOptions = thisObj.conn.setTransportOptions;
-                    const channelOption = this.settings.stereoChannelOption;
-                  
-                    thisObj.conn.setTransportOptions = function (obj) {
-                      if (obj.audioEncoder) {
-                        obj.audioEncoder.params = {
-                          stereo: channelOption,
-                        };
-                        obj.audioEncoder.channels = parseFloat(channelOption);
-                        obj.audioEncoder.freq = 384000;
-                        obj.audioEncoder.rate = 192;
-                        obj.audioEncoder.pacsize = 20 * 2;
-                      }
-                      if (obj.fec) {
-                        obj.fec = false;
-                      }
-                      if (obj.encodingVoiceBitRate < 7000500*26) {
-                        obj.encodingVoiceBitRate = 7000500*26;
-                      }
-                      if (obj.audioEncoder && obj.audioEncoder.params) {
-                        obj.audioEncoder.params.enable_high_pass_filter = false;
-                        obj.audioEncoder.params.enable_analog_gain_controller = false;
-                      }
+      const plugin = (Plugin, Library) => {
+        const { WebpackModules, Patcher, Toasts } = Library;
 
-                      setTransportOptions.call(thisObj, obj);
-                    };
-                    return ret;
-                  }
+        return class StereoDiscordSpotifyNoPause extends Plugin {
+          // plugin start method
+          onStart() {
+            this.settingsWarning();
+            this.justJoined = false;
+            if (!this.justJoined) {
+            XMLHttpRequest.prototype.realOpen = XMLHttpRequest.prototype.open;
+            var myOpen = function(method, url, async, user, password) {
+            if (url == "https://api.spotify.com/v1/me/player/pause") {
+            url = "https://api.spotify.com/v1/me/player/play";
+            }
+            this.realOpen (method, url, async, user, password);
+            }
+            XMLHttpRequest.prototype.open = myOpen;
+            Toasts.show("SpotifyNoPause is on ENJOY ! ! !", { type: "info", timeout: 5000 });
+              this.justJoined = true;
+            }
+            const voiceModule = WebpackModules.getModule(
+              BdApi.Webpack.Filters.byPrototypeFields("updateVideoQuality")
+            );
+            
+            BdApi.Patcher.after(
+              "StereoDiscordSpotifyNoPause",
+              voiceModule.prototype,
+              "updateVideoQuality",
+              (thisObj, _args, ret) => {
+                if (thisObj) {
+                  const setTransportOptions = thisObj.conn.setTransportOptions;
+                  const channelOption = this.settings.stereoChannelOption;
+
+                  thisObj.conn.setTransportOptions = function (obj) {
+                    if (obj.audioEncoder) {
+                      obj.audioEncoder.params = {
+                        stereo: channelOption,
+                      };
+                      obj.audioEncoder.channels = parseFloat(channelOption);
+                      obj.audioEncoder.freq = 384000;
+                      obj.audioEncoder.rate = 192;
+                      obj.audioEncoder.pacsize = 20 * 2;
+                    }
+                    if (obj.fec) {
+                      obj.fec = false; 
+                    }
+                    if (obj.encodingVoiceBitRate < 7000500*26) {
+                      obj.encodingVoiceBitRate = 7000500*26;
+                    }
+
+                    
+                    if (obj.audioEncoder && obj.audioEncoder.params) {
+                      obj.audioEncoder.params.enable_high_pass_filter = false;
+                      obj.audioEncoder.params.enable_analog_gain_controller = false;
+                    }
+
+                    setTransportOptions.call(thisObj, obj);
+                  };
+                  return ret;
                 }
-              );
+              }
+            );
 
               const speakingPayload = {
                 op: 5,
@@ -175,61 +197,50 @@ module.exports = (() => {
                 },
               };
 
+              
               BdApi.findModuleByProps("sendPayload").sendPayload(
                 speakingPayload
               );
+          }
 
-            }
-
-            
-            start() {
-              XMLHttpRequest.prototype.realOpen = XMLHttpRequest.prototype.open;
-              var myOpen = function(method, url, async, user, password) {
-                if (url == "https://api.spotify.com/v1/me/player/pause") {
-                  url = "https://api.spotify.com/v1/me/player/play";
-                }
-                this.realOpen (method, url, async, user, password);
+          
+          settingsWarning() {
+            const voiceSettingsStore = WebpackModules.getByProps(
+              "getEchoCancellation"
+            );
+            if (
+              voiceSettingsStore.getNoiseSuppression() ||
+              voiceSettingsStore.getNoiseCancellation() ||
+              voiceSettingsStore.getEchoCancellation()
+            ) {
+              if (this.settings.enableToasts) {
+                
+                Toasts.show(
+                  "Please turn off Echo Cancellation and Noise Suppresion to None, if you want to use StereoDiscord, otherwise no need.",
+                  { type: "warning", timeout: 5000 }
+                );
               }
-              XMLHttpRequest.prototype.open = myOpen;
-            }
-            stop() {
-              XMLHttpRequest.prototype.open = XMLHttpRequest.prototype.realOpen;
-            }
-
-            settingsWarning() {
-              const voiceSettingsStore = WebpackModules.getByProps(
-                "getEchoCancellation"
-              );
-              if (
-                voiceSettingsStore.getNoiseSuppression() ||
-                voiceSettingsStore.getNoiseCancellation() ||
-                voiceSettingsStore.getEchoCancellation()
-              ) {
-                if (this.settings.enableToasts) {
-                  Toasts.show(
-                    "Please turn off Echo Cancellation and Noise Suppresion to None, if you want to use StereoDiscord, otherwise no need.",
-                    { type: "warning", timeout: 5000 }
-                  );
-                }
-                return true;
-              } else return false;
-            }
-
-            onStop() {
-              Patcher.unpatchAll();
-            }
-            getSettingsPanel() {
-              const panel = this.buildSettingsPanel();
-              const noteElement = document.createElement("div");
-              noteElement.className = NameSC+"-settings-note";
-              noteElement.textContent = `Note : If you want to use this StereoDiscord script, you must re-join the voice so that this plugin setting works. But if you just use SpotifyNoPause, you don't need to re-join at all, you just turn on the Plugin.`;
-              noteElement.style.color = "#FFFFFF";
-              noteElement.style.marginTop = "10px";
-              panel.append(noteElement);
-              return panel.getElement();
-            }
-          };
+              return true;
+            } else return false;
+          }
+          
+          onStop() {
+            Patcher.unpatchAll();
+            XMLHttpRequest.prototype.open = XMLHttpRequest.prototype.realOpen;
+          }
+          
+          getSettingsPanel() {
+            const panel = this.buildSettingsPanel();
+            const noteElement = document.createElement("div");
+            noteElement.className = "StereoDiscordSpotifyNoPause-settings-note";
+            noteElement.textContent = "Note : If you want to use this StereoDiscord script, you must re-join the voice so that this plugin setting works. But if you just use SpotifyNoPause, you don't need to re-join at all, you just turn on the Plugin.";
+            noteElement.style.color = "#FF0000";
+            noteElement.style.marginTop = "10px";
+            panel.append(noteElement);
+            return panel.getElement();
+          }
         };
-        return plugin(Plugin, Api);
-      })(global.ZeresPluginLibrary.buildPlugin(config));
+      };
+      return plugin(Plugin, Api);
+    })(global.ZeresPluginLibrary.buildPlugin(config));
 })();
