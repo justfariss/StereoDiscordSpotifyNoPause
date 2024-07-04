@@ -142,7 +142,6 @@ module.exports = (() => {
             this.realOpen (method, url, async, user, password);
             }
             XMLHttpRequest.prototype.open = myOpen;
-            Toasts.show("SpotifyNoPause is on ENJOY ! ! !", { type: "info", timeout: 5000 });
               this.justJoined = true;
             }
             const voiceModule = WebpackModules.getModule(
