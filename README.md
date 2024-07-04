@@ -9,7 +9,7 @@ StereoDiscord : So that your discord sound can be stereo and also clear
 
 SpotifyNoPause : Prevents Discord from pausing your Spotify after 30 seconds of constant microphone input.
 
-# Note
+# Notes for StereoDiscord
 If you want to use the StereoDiscord Plugin, you need to follow the photo below, but if you don't want StereoDiscord, and just want to use SpotifyNoPause, you don't need to follow the photo below.
 
 ![image](https://github.com/justfariss/StereoDiscord/assets/49750385/5e976eae-a984-4a73-81bc-1e5851e115f7)
