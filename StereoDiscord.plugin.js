@@ -6,7 +6,7 @@
  * @website https://github.com/justfariss
  * @source https://github.com/justfariss
  * @invite motionime
- * @updateUrl https://github.com/justfariss
+ * @updateUrl https://raw.githubusercontent.com/justfariss/StereoDiscord/main/StereoDiscord.plugin.js
  */
 var NameSC = "StereoDiscord"
 module.exports = (() => {
