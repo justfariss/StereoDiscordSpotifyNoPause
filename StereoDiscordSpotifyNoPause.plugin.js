@@ -17,8 +17,10 @@ module.exports = (() => {
       name: NameSC,
       authors: [{ name: "Just F", discord_id: "997016243741667379" }],
       version: "0.0.2",
-      description:
-        "This will make your voice clear and stereo, in the same plugin, you will also get the SpotifyNoPause plugin, so this plugin includes Stereo and SpotifyNoPause.",
+      description: "This will make your voice clear and stereo, in the same plugin, you will also get the SpotifyNoPause plugin, so this plugin includes Stereo and SpotifyNoPause.",
+      github: "https://github.com/justfariss",
+      github_raw: "https://raw.githubusercontent.com/justfariss/StereoDiscordSpotifyNoPause/main/StereoDiscordSpotifyNoPause.plugin.js"
+
     },
     changelog: [
       {
@@ -129,7 +131,6 @@ module.exports = (() => {
         const { WebpackModules, Patcher, Toasts } = Library;
 
         return class StereoDiscordSpotifyNoPause extends Plugin {
-          // plugin start method
           onStart() {
             this.settingsWarning();
             this.justJoined = false;
