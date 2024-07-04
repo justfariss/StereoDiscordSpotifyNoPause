@@ -1,3 +1,8 @@
+# Requirement
+You need Batterdiscord to use this Plugin.
+
+Please download Batterdiscord here [Batterdiscord](https://betterdiscord.app)
+
 # StereoDiscordSpotifyNoPause
 
 StereoDiscord : So that your discord sound can be stereo and also clear 
