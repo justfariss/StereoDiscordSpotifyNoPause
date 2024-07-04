@@ -1,6 +1,7 @@
-# StereoDiscord
+# StereoDiscordSpotifyNoPause
 
-So that your discord sound can be stereo and also clear
+StereoDiscord : So that your discord sound can be stereo and also clear
+SpotifyNoPause : Prevents Discord from pausing your Spotify after 30 seconds of constant microphone input.
 
 # Note
 If you want to use this Plugin, you must follow the settings in the photo below!
